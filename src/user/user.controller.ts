@@ -35,6 +35,9 @@ export class UserController{
     
     @Get(':id')
     async show(@Param('id', ParseIntPipe) id : number ){
+        
+        await this.userService.exists(id);
+        
         return this.userService.findById(id);
     }
 

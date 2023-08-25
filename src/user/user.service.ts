@@ -25,6 +25,9 @@ constructor(private readonly prisma: PrismaService){}
     }
 
     async findById(id : number){
+
+        await this.exists(id);
+
         return this.prisma.user.findUnique(
             {
                 where:
@@ -91,7 +94,10 @@ constructor(private readonly prisma: PrismaService){}
     }
 
     async exists (id: number){
-        if(!(await this.findById(id)) ){
+        if(!(await this.prisma.user.count({
+            where:
+            {id}
+        })) ){
             throw new NotFoundException(`O usuário ${id} nao existe.`); 
         }
     }
