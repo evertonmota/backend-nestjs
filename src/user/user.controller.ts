@@ -4,6 +4,7 @@ import { UpdatePutUserDTO } from "./dto/update-put-user.dto";
 import { UpdatePatchUserDTO } from "./dto/update-patch-user.dto";
 import { UserService } from "./user.service";
 import { LogInterceptor } from "src/interceptors/log.interceptor";
+import { ParamId } from "src/decorators/param-id.decorator";
 
 @Controller('users')
 @UseInterceptors(LogInterceptor)
@@ -34,8 +35,10 @@ export class UserController{
     }*/
     
     @Get(':id')
-    async show(@Param('id', ParseIntPipe) id : number ){
+    async show(@ParamId() id: number ){
         
+        console.log({id});
+
         await this.userService.exists(id);
         
         return this.userService.findById(id);
@@ -43,7 +46,7 @@ export class UserController{
 
 
     @Put(':id')
-    async update(@Body() userPutDTO : UpdatePutUserDTO, @Param('id', ParseIntPipe) id : number ){
+    async update(@Body() userPutDTO : UpdatePutUserDTO, @ParamId() id: number ){
         return this.userService.update(id, userPutDTO );
     }
 /*
@@ -67,7 +70,7 @@ export class UserController{
     */
 
     @Patch(':id')
-    async updatePartial(@Body() userDTO : UpdatePatchUserDTO, @Param('id', ParseIntPipe) id : number ){
+    async updatePartial(@Body() userDTO : UpdatePatchUserDTO, @ParamId() id: number ){
         return  this.userService.updatePartial(id, userDTO) 
      }
 
