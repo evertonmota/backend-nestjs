@@ -21,7 +21,7 @@ async login(@Body() {email,password}: AuthLoginDTO){
 
 @Post('register')
 async registry(@Body() body: AuthRegisterDTO){
-    return this.userService.create(body);
+    return this.authService.register(body);
 }
 
 @Post('forget')
