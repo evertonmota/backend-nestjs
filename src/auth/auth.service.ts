@@ -45,7 +45,7 @@ export class AuthService{
     isValidToken(token: string){
         try {
             this.checkToken(token);
-            return true
+            return true;
         } catch (e) {
             return false;
         }
