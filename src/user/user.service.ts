@@ -36,7 +36,7 @@ constructor(private readonly prisma: PrismaService){}
         );
     }
 
-    async update( id : number, {name, email,password, birthAt} : UpdatePutUserDTO){
+    async update( id : number, {name, email,password, birthAt, role} : UpdatePutUserDTO){
 
         if(!(await this.findById(id)) ){
             throw new NotFoundException(`O usuário ${id} nao existe.`); 
@@ -46,12 +46,12 @@ constructor(private readonly prisma: PrismaService){}
             {
                 where :
                     {id},
-                    data:{name, email,password, birthAt: birthAt ? new Date(birthAt) : null}
+                    data:{name, email,password, birthAt: birthAt ? new Date(birthAt) : null, role}
             }
         )
     }
 
-    async updatePartial( id : number,{name, email,password, birthAt}: UpdatePatchUserDTO){
+    async updatePartial( id : number,{name, email,password, birthAt, role}: UpdatePatchUserDTO){
 
         if(!(await this.findById(id)) ){
             throw new NotFoundException(`O usuário ${id} nao existe.`); 
@@ -72,6 +72,10 @@ constructor(private readonly prisma: PrismaService){}
 
         if(data.password){
             data.password = password;
+        }
+
+        if(data.role){
+            data.role = role;
         }
         return this.prisma.user.update(
             {
