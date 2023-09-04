@@ -10,6 +10,7 @@ import { Role } from "src/enums/role.enum";
 import { RoleGuard } from "src/auth/guards/role.guard";
 import { AuthGuard } from "src/auth/guards/auth.guard";
 
+@Roles(Role.Admin)
 @UseGuards(AuthGuard,RoleGuard)
 @Controller('users')
 @UseInterceptors(LogInterceptor)
@@ -18,13 +19,11 @@ export class UserController{
 
     constructor(private readonly userService : UserService){}
 
-    @Roles(Role.Admin)
     @Post()
     async create(@Body() data: CreateUserDTO){
         return this.userService.create(data);
     }
     
-    @Roles(Role.Admin)
     @Get()
     async listAll(){
         return this.userService.list();
@@ -41,7 +40,6 @@ export class UserController{
         return {user:{}, id}
     }*/
     
-    @Roles(Role.Admin)
     @Get(':id')
     async show(@ParamId() id: number ){
         
@@ -52,7 +50,6 @@ export class UserController{
         return this.userService.findById(id);
     }
 
-    @Roles(Role.Admin)
     @Put(':id')
     async update(@Body() userPutDTO : UpdatePutUserDTO, @ParamId() id: number ){
         return this.userService.update(id, userPutDTO );
@@ -77,7 +74,6 @@ export class UserController{
     }
     */
 
-    @Roles(Role.Admin)
     @Patch(':id')
     async updatePartial(@Body() userDTO : UpdatePatchUserDTO, @ParamId() id: number ){
         return  this.userService.updatePartial(id, userDTO) 
@@ -100,7 +96,6 @@ export class UserController{
         }
     } */
 
-    @Roles(Role.Admin)
     @Delete(':id')
     async delete(@Param('id', ParseIntPipe) id : number ){
         return this.userService.delete(id);
