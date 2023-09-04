@@ -22,6 +22,6 @@ export class RoleGuard implements CanActivate{
 
         const rolesFilted = requeiredRoles.filter( r => r === user.role);
 
-        return rolesFilted.length > 0;
+        return rolesFilted.length > 0; 
     }
 }
