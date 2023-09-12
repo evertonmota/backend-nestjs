@@ -6,12 +6,14 @@ import { AuthModule } from './auth/auth.module';
 import { throttle } from 'rxjs';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+              ConfigModule.forRoot(),
               ThrottlerModule.forRoot({
                 ttl:60,
-                limit:10
+                limit:100
               }),
               forwardRef(() => UserModule), 
               forwardRef(() => AuthModule)
