@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Post, UseGuards, UseInterceptors, UploadedFile,BadRequestException } from "@nestjs/common";
+import { Body, Headers, Controller, Post, UseGuards, UseInterceptors, UploadedFile,BadRequestException, UploadedFiles } from "@nestjs/common";
 import { AuthRegisterDTO } from "./dto/auth-register.dto";
 import { AuthLoginDTO } from "./dto/auth-login.dto";
 import { AuthForgetDTO } from "./dto/auth-forget.dto";
@@ -6,7 +6,7 @@ import { UserService } from "src/user/user.service";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "./guards/auth.guard";
 import { User } from "src/decorators/user.decorator";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor,FilesInterceptor,FileFieldsInterceptor } from "@nestjs/platform-express";
 import { join } from "path";
 import { FileService } from "src/file/file.service";
 
@@ -55,4 +55,28 @@ async me(@User() user){
         }
         return {sucess:true};
     }
+
+    @UseInterceptors(FilesInterceptor('files'))
+    @UseGuards(AuthGuard)
+    @Post('files')
+        async uploadFiles(@User() user, @UploadedFiles()files : Express.Multer.File[]){
+        
+            return files;
+            
+        }
+
+    @UseInterceptors(FileFieldsInterceptor([{
+        name: 'photo',
+        maxCount: 1
+    },{
+        name: 'documents' ,
+        maxCount: 10
+    }]))
+    @UseGuards(AuthGuard)
+    @Post('files-fields')
+        async uploadFilesFields(@User() user, @UploadedFiles() files: {photo: Express.Multer.File, documents: Express.Multer.File[]}){
+        
+            return files;
+            
+        }
 }
