@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Post, UseGuards, UseInterceptors, UploadedFile,BadRequestException, UploadedFiles } from "@nestjs/common";
+import { Body, Headers, Controller, Post, UseGuards, UseInterceptors, UploadedFile,BadRequestException, UploadedFiles, ParseFilePipe, FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
 import { AuthRegisterDTO } from "./dto/auth-register.dto";
 import { AuthLoginDTO } from "./dto/auth-login.dto";
 import { AuthForgetDTO } from "./dto/auth-forget.dto";
@@ -44,7 +44,12 @@ async me(@User() user){
 @UseInterceptors(FileInterceptor('file'))
 @UseGuards(AuthGuard)
 @Post('photos')
-    async uploadPhotos(@User() user, @UploadedFile()photo : Express.Multer.File){
+    async uploadPhotos(@User() user, @UploadedFile(new ParseFilePipe({
+        validators:[
+            new FileTypeValidator({fileType:'image/jpeg'}),
+            new MaxFileSizeValidator({maxSize: 1024 * 50}),
+        ]
+    })) photo : Express.Multer.File){
     
         const path = join(__dirname,'..', '..','storage', 'photos', `photo-${user.id}.png`)
 
@@ -53,13 +58,17 @@ async me(@User() user){
         }catch(e){
             throw new BadRequestException(e);
         }
-        return {sucess:true};
+        return  {photo};//{sucess:true};
     }
 
     @UseInterceptors(FilesInterceptor('files'))
     @UseGuards(AuthGuard)
     @Post('files')
-        async uploadFiles(@User() user, @UploadedFiles()files : Express.Multer.File[]){
+        async uploadFiles(@User() user, @UploadedFiles(new ParseFilePipe({
+            validators:[
+                new FileTypeValidator({fileType:'image/png'})
+            ]
+        }))files : Express.Multer.File[]){
         
             return files;
             
